@@ -15,3 +15,20 @@ Die RVK enthält eine Reihe von Klassen zu einzelnen Autoren. Für diese können
 3. Mapping (z.B. Wikidata mix'n'match)
 
 Um das Mapping nach Aktualisierungen wiederholen zu können, sollten die Arbeitsschritte möglichts automatisiert ablaufen. 
+
+## Umsetzung
+
+Personenklassen strehen anscheinend immer Unter einer Klasse mit einer Benennung wie "Autoren A", "Autoren B" etc. Weitere Personen gibt es unter Klassen wie "Autoren und Denkmäler V" allerdings sind darunter auch andere Entitäten. Aus JSKOS lassen sich diese Überklassen so ermitteln:
+
+    jq -c 'select(.prefLabel.de|match("^Autoren [A-Z]$"))' rvk.ndjson
+
+Von diesen 2114 Klassen (Stand Dump 01/2018) sollten sich alle direkten Unterklassen auf einzelne Autoren beziehen. 
+
+    ...TODO: weiteres jq-Skript...
+
+Etwas komplizierter ist die Kontextualisierung der Personen-Klassen.
+
+...TODO...
+
+Die Mappings werden zunächst in Wikidata eingetragen. RVK-Wikidata-Mappings werden jetzt schon täglich abgerufen: <http://coli-conc.gbv.de/concordances/wikidata/>.
+
