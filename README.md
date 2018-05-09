@@ -20,15 +20,20 @@ Um das Mapping nach Aktualisierungen wiederholen zu können, sollten die Arbeits
 
 Personenklassen strehen anscheinend immer Unter einer Klasse mit einer Benennung wie "Autoren A", "Autoren B" etc. Weitere Personen gibt es unter Klassen wie "Autoren und Denkmäler V" allerdings sind darunter auch andere Entitäten. Aus JSKOS lassen sich diese Überklassen so ermitteln:
 
-    jq -c 'select(.prefLabel.de|match("^Autoren [A-Z]$"))' rvk.ndjson
+    jq -c 'select(.prefLabel.de|match("^Autoren [A-Z]$"))' rvk.ndjson > letters.ndjson
 
-Von diesen 2114 Klassen (Stand Dump 01/2018) sollten sich alle direkten Unterklassen auf einzelne Autoren beziehen. 
+Diese Liste schliesst nicht alle Klassen ein, die einzelne Autoren als Unterklassen zusammmenfassen, aber die meisten.
 
-    ...TODO: weiteres jq-Skript...
+Von diesen 2114 Klassen (Stand Dump 01/2018) sollten sich alle direkten Unterklassen auf einzelne Autoren beziehen: 
 
-Etwas komplizierter ist die Kontextualisierung der Personen-Klassen.
+    jq -s '[.[]|{key:.uri}]|from_entries' letters.ndjson > index.json
+    jq --slurpfile l index.json 'select(.broader[0].uri|in($l[0]))' rvk.ndjson > authors.ndjson
 
-...TODO...
+Es zeigt sich, dass mindestens 694.903 der 860.881 RVK-Klassen (also mindestens 80%) einzelnen Autoren zugeordnet sind und daher besser auf GND/VIAF/Wikidata statt auf andere Klassifikationen gemappt werden sollten. Wie mit Unterklassen von Autorenklassen umgegangen werden soll, muss noch untersucht werden.
+
+Zum Mapping der Personen-Klassen sollten diese kontextualisiert werden.
+
+...TODO: Ermittlung von Mapping-Kandidaten...
 
 Die Mappings werden zunächst in Wikidata eingetragen. RVK-Wikidata-Mappings werden jetzt schon täglich abgerufen: <http://coli-conc.gbv.de/concordances/wikidata/>.
 
